@@ -540,3 +540,16 @@ test('workflow JSON is valid and uses the exact required n8n node types and vers
   assert.equal(byType('n8n-nodes-base.noOp').length, 1);
   assert.ok(byType('n8n-nodes-base.stickyNote').length >= 3);
 });
+
+test('workflow Code nodes contain exactly the generated snippets', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const { buildSnippets, WORKFLOW_CODE_NODES } = require('../scripts/build-snippets.js');
+  const workflow = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'workflows', 'lead-followup-drafts.json'), 'utf8'));
+  const files = buildSnippets('\n');
+  for (const [nodeName, file] of Object.entries(WORKFLOW_CODE_NODES)) {
+    const node = workflow.nodes.find((n) => n.name === nodeName);
+    assert.ok(node, `missing node ${nodeName}`);
+    assert.equal(node.parameters.jsCode.replace(/\r\n/g, '\n'), files[file]);
+  }
+});

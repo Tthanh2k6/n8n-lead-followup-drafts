@@ -159,8 +159,23 @@ function writeSnippets() {
   }
 }
 
+// Keep the Code nodes inside the importable workflow identical to the snippets.
+const WORKFLOW_CODE_NODES = { 'Select leads': 'select-leads.js', 'Parse draft': 'parse-draft.js' };
+
+function writeWorkflowCode() {
+  const workflowPath = path.join(__dirname, '..', 'workflows', 'lead-followup-drafts.json');
+  const workflow = JSON.parse(fs.readFileSync(workflowPath, 'utf8'));
+  const files = buildSnippets('\n');
+  for (const node of workflow.nodes) {
+    const file = WORKFLOW_CODE_NODES[node.name];
+    if (file) node.parameters.jsCode = files[file];
+  }
+  fs.writeFileSync(workflowPath, JSON.stringify(workflow, null, 2) + '\n', 'utf8');
+}
+
 if (require.main === module) {
   writeSnippets();
+  writeWorkflowCode();
 }
 
 module.exports = {
@@ -168,4 +183,6 @@ module.exports = {
   buildParseDraftSnippet,
   buildSnippets,
   writeSnippets,
+  writeWorkflowCode,
+  WORKFLOW_CODE_NODES,
 };
