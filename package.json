@@ -1,0 +1,15 @@
+{
+  "name": "n8n-lead-followup-drafts",
+  "version": "1.0.0",
+  "description": "n8n workflow template and tested helper logic for creating idempotent Gmail follow-up drafts from Google Sheets leads",
+  "main": "src/followup.js",
+  "scripts": {
+    "test": "node --test",
+    "build:snippets": "node scripts/build-snippets.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Trung Thanh Tran",
+  "license": "MIT"
+}
